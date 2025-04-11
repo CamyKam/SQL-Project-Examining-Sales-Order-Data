@@ -56,7 +56,22 @@ ORDER BY Year ASC;
 ```
 ![image](https://github.com/user-attachments/assets/f3c067a8-b4a3-4105-b7aa-edb3ee6cb9c5)
 
-Looks like the company has been quite consistent throughout the years; fulfilling orders within 4 days. 
+Looks like the company has been quite consistent throughout the years; fulfilling orders within 4 days. Let's take an additional look at fulfilment/shipping time.
+
+```sql
+SELECT Region, AVG(datediff(Ship_Date, Order_Date)) AS 'Average # of Days to Ship' 
+FROM sales_project.superstore_sales_data
+GROUP BY Region;
+```
+```sql
+SELECT Category, AVG(datediff(Ship_Date, Order_Date)) AS 'Average # of Days to Ship' 
+FROM sales_project.superstore_sales_data
+GROUP BY Category;
+```
+![image](https://github.com/user-attachments/assets/6fa13b25-235f-4df6-9e4d-a799c0aa3057)  ![image](https://github.com/user-attachments/assets/ddcd965d-2f3e-46f2-b25e-9d45a1867486)
+
+The average number of days to fulfill and ship an order is approximately the same regardless of destination region, with the Central region orders being only slightly higher. 
+I also wanted to see if the category of the order items being shipped out affected the fulfillment time but overall, there was very minimal differences. 
 
 ### Senior Management is Considering Changing the Shipping Structure into 2 categories: Priority and Standard base on the Ship Mode. If that's the case, how many historical orders would be considered 'Priority', and how many would be 'Standard'? 
 We assume that each item in an order gets shipped out in one 'package' thus being considered one order
@@ -78,5 +93,5 @@ GROUP BY shipment_types;
 
 If we were to adopt this change in shipping structure, we can expect about 78.6% of our orders to be sent out as Standard Shipping
 
-
+## Average
 
