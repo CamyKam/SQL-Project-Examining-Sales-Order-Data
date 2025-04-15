@@ -9,22 +9,24 @@ We have an Order table containing the company's order information, with each row
 ### What has been the total sales $ in each Region?
 
 ```sql
-SELECT Region, FORMAT(SUM(sales),'C') as "Total Sales" FROM sales_project.superstore_sales_data
+SELECT Region, CONCAT('$',FORMAT(SUM(Sales),2)) as "Total Sales"
+FROM sales_project.superstore_sales_data
 GROUP BY Region
 ORDER BY sum(sales) DESC;
 ```
-![image](https://github.com/user-attachments/assets/a2b115e1-45f5-43d2-82b9-7f480998a61f)
+![image](https://github.com/user-attachments/assets/983ea5c9-fce0-40b6-a6eb-1cefa8e53c6c)
 
 The region with the highest $ amount of sales (summed across all years) is the West
 
 ### Which Product Categories Drive the Highest Sales?
 
 ```sql
-SELECT Category, FORMAT(SUM(sales),'C') as "Total Sales" FROM sales_project.superstore_sales_data
+SELECT Category, CONCAT('$',FORMAT(SUM(Sales),2)) as "Total Sales"
+FROM sales_project.superstore_sales_data
 GROUP BY Category
-ORDER BY SUM(sales) DESC;
+ORDER BY sum(sales) DESC;
 ```
-![image](https://github.com/user-attachments/assets/e1686bc8-c0b5-4e1a-9f24-8685ba4d37a8)
+![image](https://github.com/user-attachments/assets/7df76016-8bdb-4fc1-aa7d-e1cb8a94ea2f)
 
 This would be the technology category! It includes items such as phones, accessories, and machines
 
@@ -35,13 +37,13 @@ SELECT
     Customer_ID, 
     Customer_Name, 
     COUNT(DISTINCT(Order_ID)) AS "Number of Orders", 
-    FORMAT(SUM(sales),'C') as "Total Sales($)" 
+    CONCAT('$',FORMAT(SUM(Sales),2)) as "Total Sales($)" 
 FROM sales_project.superstore_sales_data
 GROUP BY Customer_Name
 ORDER BY SUM(sales) DESC
 LIMIT 10;
 ```
-![image](https://github.com/user-attachments/assets/dfb6c3be-7bdd-46e1-8891-e5a440cc3adf)
+![image](https://github.com/user-attachments/assets/a8e88798-0007-487b-8006-6f92248dc5fb)
 
 Mr.Sean Miller takes 1st place here, with total sales $ of his orders amounting to $24,196. That's 76.4% higher than the second top customer! If the company ever wanted to implement a VIP program they might want to consider reaching out to this inidividual first.
 
@@ -93,5 +95,27 @@ GROUP BY shipment_types;
 
 If we were to adopt this change in shipping structure, we can expect about 78.6% of our orders to be sent out as Standard Shipping
 
-## Average
+## Average Orders/Sales per Month
+
+```sql
+SELECT 
+    Month, CEILING(AVG(Number_of_Orders)) AS 'Average Number of Orders',  
+    CONCAT('$',FORMAT(AVG(total_sales_$),2)) AS 'Average Sales(in $)'
+FROM(
+    SELECT YEAR(Order_Date) AS 'Year', 
+        MONTH(Order_Date) AS 'Month',
+        COUNT(distinct(Order_ID)) AS Number_of_Orders,
+        SUM(Sales) AS total_sales_$ 
+    FROM sales_project.superstore_sales_data
+    GROUP BY Year, Month
+)AS distinct_orders_by_month
+Group BY Month
+Order BY Month ASC;
+```
+![image](https://github.com/user-attachments/assets/548caa73-c037-46a0-814f-870bee6cd9bf)
+
+The query above provides me a general sense of the average number of orders and sales to expect for each month (based on 4 years worth of data). I used CEILING() to round up the order averages to whole integer values. Looking at the results, we can expect the number of orders to peak around Sept, Nov, Dec while Jan, Feb are anticipated to have the lowest number of orders. I hypothesize that the peak months are due to the back-to-school season along with the holidays, but I do not have enough additional details or context in this project to further prove that hypothesis.
+
+
+
 
