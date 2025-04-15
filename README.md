@@ -1,4 +1,4 @@
-# Using SQL to Pull Sales Data
+# Using SQL to Pull & Examine Sales Data
 With the use of MySQL Workbench, I looked at data from this Kaggle data set https://www.kaggle.com/datasets/poojacareer/sales-data-analysis-using-mysql-excel-and-power-bi?select=superstore_final_dataset.csv
 and utilized different SQL queries to answer some sales data questions on the furniture, technology, and office equipment this company is selling. 
 
